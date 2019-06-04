@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import useAbortableFetch  from 'use-abortable-fetch';
+import { useSpring, animated } from 'react-spring';
 import Toggle from './Toggle';
 // import Counter from './Counter';
 
@@ -11,13 +12,17 @@ const App = () => {
 
   const { data, loading } = useAbortableFetch('https://my-json-server.typicode.com/leveluptuts/fakeapi/dishes');
 
-  if (!data) return null;
+  const props = useSpring({ opacity: 1, from: { opacity: 0 } });
+  console.log('props', props);
 
   return (
     <div className="main-wrapper" ref={ref}>
-      <h1 onClick={() => ref.current.classList.add('new-fake-class')}>
+      <animated.h1
+        style={props}
+        onClick={() => ref.current.classList.add('new-fake-class')}
+      >
         Level Up Dishes
-      </h1>
+      </animated.h1>
       <Toggle />
       {/* <Counter /> */}
       <form
@@ -32,7 +37,7 @@ const App = () => {
         />
         <button>Submit</button>
       </form>
-      {data.map((dish, i) => (
+      {data && data.map((dish, i) => (
       <article key={i} className="dish-card dish-card--withImage">
         <h3>{dish.name}</h3>
         <p>{dish.desc}</p>
